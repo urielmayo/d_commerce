@@ -1,0 +1,53 @@
+{% include 'base.html' %}
+
+{% block head_content %}
+    <title>D - Commerce</title>
+{% endblock head_content %}
+
+
+{% block container %}
+    <div class="container">
+        <div class="row">
+            {% if products %}
+            <div class="col-2 justify-content center rounded" style="background-color: rgb(248, 248, 248);">
+                <div class="card mt-2">
+                    <div class="card-body">
+                        <h6 class="card-title">Categories</h6>
+                        {% for category in categories %}
+                        <ul>
+                            <li><a href="{% url 'products:list' %}?search={{search_val | urlencode}}&category={{category | urlencode}}">{{category}}</a></li>
+                        </ul>
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-10">
+                {% for product in products %}
+                <div class="card">
+                    <div class="row mb-2 mt-2">
+                        <div class="col-auto">
+                            <img class="img-fluid" width="160" height="160" src="{{product.picture.url}}">
+                        </div>
+                        <div class="col">
+                            <div class="card-body">
+                                <h5 class="card-title">{{product.name}}</h5>
+                                <p class="card-text">{{product.price}}</p>
+                                <a href="{% url 'products:detail' product.slug %}" class="btn btn-primary stretched-link">Check</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+            {% else %}
+            <div class="card mb-2">
+                <div class="card-body">
+                    <h2 class="card-title">There are no products than match your search</h2>
+                    <p class="card-text">Maybe you can try with another search</p>
+                </div>
+            </div>
+            {% endif %}
+        </div>
+    </div>
+{% endblock container %}

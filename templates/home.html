@@ -1,0 +1,24 @@
+{% include 'base.html' %}
+
+
+{% block head_content %}
+    <title>D - Commerce</title>
+{% endblock head_content %}
+
+
+{% block container %}
+    <div class="container-fluid w-75 rounded" style="background-color: #eee;">
+        <h1 class="text-center">D - COMMERCE</h1>
+        <p class="text-center fw-light">Buy and Sell products online.</p>
+        <br>
+        <div class="container">
+            <pre class="text-muted">
+                This is an e-commerce simulator using Django, Postgres & Bootstrap mainly.
+                Its main capabilities are:
+                    - Register, login and logout users
+                    - Publish products and manage stock quantity
+                    - Answer questions and review products
+            </pre>
+        </div>
+    </div>
+{% endblock container %}

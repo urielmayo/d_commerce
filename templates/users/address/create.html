@@ -1,0 +1,14 @@
+{% block head_content %}
+<title> My Profile | Add Address</title>
+{% endblock head_content %}
+
+
+{% block container %}
+<div class="container border rounded">
+    <form method="post">
+        {% csrf_token %}
+        {{ form.as_ul }}
+        <button type="submit" value="Submit">
+    </form>
+</div>
+{% endblock container %}

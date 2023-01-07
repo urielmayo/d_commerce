@@ -1,0 +1,17 @@
+{% extends 'base.html' %}
+
+{% block head_content%}
+    <title>Edit Address</title>
+{% endblock head_content %}
+
+
+{% block container %}
+    <div class="container">
+        <a href="{% url 'users:address-list' %}">Go Back</a>
+        <form method="post">
+            {% csrf_token %}
+            {{ form.as_ul}}
+            <input type="submit" value="Update">
+        </form>
+    </div>
+{% endblock container %}

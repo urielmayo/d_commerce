@@ -1,0 +1,13 @@
+{% include 'base.html' %}
+
+{% block head_content %}
+    <title>Sell Products</title>
+{% endblock head_content %}
+
+
+{% block container %}
+    <div class="container">
+        {% csrf_token %}
+        {{form.as_p}}
+    </div>
+{% endblock container %}

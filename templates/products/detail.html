@@ -1,0 +1,101 @@
+{% include 'base.html' %}
+
+{% block head_content %}
+    <title>{{product.name}}</title>
+{% endblock head_content %}
+
+
+{% block container %}
+    <div class="container">
+        <div class="row">
+            <div class="col-6 justiy-content-center">
+                <img class="d-block mx-auto" height="350" width="350" src="{{product.picture.url}}">
+            </div>
+            <div class="col-6">
+                <div class="row">
+                    <div class="col">
+                        <div class="container mt-2">
+                            <h5>{{product.brand}}</h5>
+                            <h5 class="card-title">{{product.name}}</h5>
+                            <h4 class="card-title">$ {{product.price}}</h4>
+                            <br>
+                            <ul>
+                                {% for attribute in product.attribute_set.all %}
+                                <li class="text-muted">{{attribute.name}}: {{attribute.value}}</li>
+                                {% endfor %}
+                            </ul>
+                            <p>Aca van las reviews</p>
+                        </div>
+                    </div>
+                    <div class="col">
+                        <div class="card">
+                            <div class="card-body">
+                                <h6>Seller: {{product.seller.user.username}}</h6>
+                                <p>Stock Quantity: {{product.stock_qty}}</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <hr>
+
+        {# Product Description #}
+        <div class="card" style="background-color: rgb(248, 248, 248);">
+            <div class="card-body">
+                <h3 class="card-title">Description</h3>
+                {{ product.description | linebreaks }}
+            </div>
+        </div>
+        <hr>
+
+        {# Questions #}
+        <div class="card" style="background-color: rgb(248, 248, 248);">
+            <div class="card-body">
+                <h3 class="card-title">Questions</h3>
+                {% for question in product.questions.all %}
+                    <ul>
+                        {% if question.answer %}
+                            <li>{{question.question}}</li>
+                            <li class="text-muted">{{question.answer}}</li>
+                        {% else %}
+                            <li>{{question.question}} <p class="text-muted">unanswered question</p></li>
+
+                            {% if request.user.profile == product.seller %}
+                                <form action="{% url 'products:answer-question' product.slug question.pk%}" method="post">
+                                    {% csrf_token %}
+                                    <input class="form-control" type="text" name="answer" placeholder="Answer question..." required>
+                                </form>
+                            {% endif %}
+                        {% endif %}
+                    </ul>
+                {% empty %}
+                    <p class="text-muted">There are no questions yet</p>
+                {% endfor %}
+                <br>
+                {% if request.user.profile != product.seller %}
+                <form action="{% url 'products:ask-question' product.slug %}" method="post">
+                    {% csrf_token %}
+                    <input name="question" class="form-control" type="text" placeholder="Ask a question..." required>
+                </form>
+                {% endif %}
+
+            </div>
+        </div>
+        <hr>
+
+        {# Reviews #}
+        <div class="card" style="background-color: rgb(248, 248, 248);">
+            <div class="card-body">
+                <h3 class="card-title">Reviews</h3>
+
+                {% for review in product.reviews.all %}
+                    <h6></h6>
+                {% empty %}
+                    <p class="text-muted">There are no reviews yet</p>
+                {% endfor %}
+            </div>
+        </div>
+        <br>
+    </div>
+{% endblock container %}
