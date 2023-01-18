@@ -1,0 +1,26 @@
+{% extends 'base.html' %}
+
+
+{% block head_content %}
+    <title> My Profile</title>
+{% endblock head_content %}
+
+
+{% block container %}
+<div class="row">
+    {# Attributes #}
+    <div class="col-3 me-2">
+        <ul class="list-group">
+            <a class="list-group-item" href="{% url 'users:address-list' %}">Addresses</a>
+            <a class="list-group-item" href="{% url 'users:paymentcard-list' %}">Payment Cards</a>
+            <a class="list-group-item" href="{% url 'users:published-products' %}">Published Products</a>
+            <a class="list-group-item" href="#">Questions</a>
+        </ul>
+    </div>
+
+    {# Dashboard #}
+    <div class="col-8 border rounded text-center">
+        <h1>Dashboard</h1>
+    </div>
+</div>
+{% endblock container %}

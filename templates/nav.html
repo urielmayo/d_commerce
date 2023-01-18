@@ -14,7 +14,10 @@
                 </div>
             </form>
         </div>
-        <div class="col offset-3">
+        <div class="col-1 offset-2">
+            <a href="{% url 'users:cart:cart' %}" class="nav-link text-white"><i class="bi bi-cart4"></i> Cart</a>
+        </div>
+        <div class="col-1">
             <ul class="navbar-nav me-auto">
                 {% if request.user.is_anonymous %}
                     <li class="nav-item">
@@ -26,8 +29,8 @@
                             {{request.user.username}}
                         </a>
                         <ul class="dropdown-menu dropdown-menu-end">
-                            <li><a class="dropdown-item" href="{% url 'users:my-profile'%}">Profile settings</a></li>
-                            <li><a class="dropdown-item" href="{% url 'products:create' %}">Sell Product</a></li>
+                            <li><a class="dropdown-item" href="{% url 'users:my-profile'%}">Profile</a></li>
+                            <li><a class="dropdown-item" href="{% url 'products:create' %}">Publish Product</a></li>
                             <li><hr class="dropdown-divider"></li>
                             <li><a class="dropdown-item" href="{% url 'users:logout' %}">Log out</a></li>
                         </ul>

@@ -1,0 +1,69 @@
+{% extends 'base.html' %}
+
+
+{% block head_content %}
+    <title>Shopping Cart</title>
+{% endblock head_content %}
+
+
+{% block container %}
+    <div class="container w-75">
+        <div class="container">
+            <h1>My Cart</h1>
+        </div>
+        <div class="container border rounded" style="background-color: rgb(248, 248, 248);">
+            {% for line in cart.shopping_cart_lines.all %}
+                <div class="container mb-4 mt-4">
+                    <div class="row align-items-center">
+                        <div class="col-2">
+                            <img src="{{line.product.picture.url}}" height="100px" width="100px">
+                        </div>
+                        <div class="col">
+                            {{ line.product.name }}
+                        </div>
+                        <div class="col-auto me-5 text-center gy-2">
+                            <ul class="list-group list-group-horizontal">
+
+                                {% if line.quantity == 1 %}
+                                    <li class="list-group-item disabled" aria-disabled="true"><i class="bi bi-dash"></i></li>
+                                {% else %}
+                                    <li class="list-group-item"><a href="{% url 'users:cart:change-qty' line.pk %}?type=subtract"><i class="bi bi-dash"></i></a></li>
+                                {% endif %}
+
+                                <li class="list-group-item">{{ line.quantity }}</li>
+                                <li class="list-group-item "><a href="{% url 'users:cart:change-qty' line.pk %}?type=add"><i class="bi bi-plus-lg"></i></a></li>
+                            </ul>
+                            <br>
+                            <a class="mt-1" href="{% url 'users:cart:remove_item' line.pk %}">Remove</a>
+                        </div>
+                        <div class="col-auto">
+                            <strong> {{line.line_total}} </strong>
+                        </div>
+                    </div>
+                </div>
+
+                {% if line != cart.shopping_cart_lines.last %}
+                <hr>
+                {% endif %}
+            {% empty %}
+                <div class="container mt-3 mb-3">
+                    <h4>Your cart is empty ;(</h4>
+                    <p>Add some products and keep on Shopping on <a href="{% url 'home' %}">d-commerce.com</a></p>
+                </div>
+            {% endfor %}
+            <hr>
+            <div class="container mb-4 mt-4">
+                <div class="row justify-content-evenly">
+                    <div class="col">
+                        <h3>Total:</h3>
+                    </div>
+                    <div class="col-auto">
+                        <h3>{{cart.total}}</h3>
+                    </div>
+                </div>
+            </div>
+
+
+        </div>
+    </div>
+{% endblock container %}

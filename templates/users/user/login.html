@@ -1,0 +1,27 @@
+{% extends 'users/user/base.html' %}
+
+{% block head_content %}
+<title>D - COMMERCE | Sign In</title>
+{% endblock %}
+
+{% block container %}
+    <div class="container mt-5 w-75 border rounded text-center">
+        <h1>Sign In</h1>
+
+        {% if form.errors %}
+            <p class="alert alert-danger"> Invalid Username or Password. Please Try Again</p>
+        {% endif %}
+
+        <form action="{% url 'users:login' %}" method="post">{% csrf_token %}
+            <div class="form-group">
+                <input class="form-control" type="text" placeholder="Username" name="username" value="{{retry_username}}">
+            </div>
+            <div class="form-group">
+                <input class="form-control" type="password" placeholder="Password" name="password">
+            </div>
+            <br>
+            <button class="btn btn-primary w-100" type="submit">Sign in</button>
+        </form>
+        <p class="mt-4">Don't have an account yet? <a href="{% url 'users:signup' %}">Sign Up Here</a></p>
+    </div>
+{% endblock %}

@@ -1,0 +1,32 @@
+<div class="container border rounded">
+    <form method="post">{% csrf_token %}
+        <div class="row mt-3 gx-2">
+            <div class="col-8">
+                {{form.main_street}}
+            </div>
+            <div class="col-4">
+                {{form.number}}
+            </div>
+        </div>
+        <div class="mt-3">
+            {{form.secondary_street}}
+        </div>
+
+        <div class="mt-3">
+            {{form.notes}}
+        </div>
+
+        <div class="row mt-3 gx-2">
+            <div class="col">{{form.city}}</div>
+            <div class="col">{{form.zip_code}}</div>
+            <div class="col">{{form.state}}</div>
+        </div>
+
+        <div class="row mt-3">
+            <div class="col">{{form.country}}</div>
+            <div class="col">{{form.type}}</div>
+        </div>
+        <br>
+        <button class="btn btn-primary w-100 mb-3" type="submit" >Save</button>
+    </form>
+</div>

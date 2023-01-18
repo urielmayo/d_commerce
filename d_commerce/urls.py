@@ -25,7 +25,7 @@ def home(request):
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('users/', include(('users.urls', 'users'), namespace='users')),
-    path('products/', include(('products.urls', 'products'), namespace='products')),
+    path('users/', include(('apps.users.urls', 'users'), namespace='users')),
+    path('products/', include(('apps.products.urls', 'products'), namespace='products')),
     path('', home, name='home')
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

@@ -1,0 +1,38 @@
+{% extends 'base.html' %}
+
+
+{% block head_content %}
+    <title>My Products</title>
+{% endblock head_content %}
+
+
+{% block container %}
+    <div class="container w-75">
+        <div class="container">
+            <h2>My Published Products</h2>
+        </div>
+
+        <div class="container border rounded" style="background-color: rgb(248, 248, 248);">
+            {% for product in published_products %}
+            <div class="container mb-4 mt-4">
+                <div class="row align-items-center">
+                    <div class="col align-items-center">
+                        {{ product.name }} | Stock: {{product.stock_qty }}
+                    </div>
+                </div>
+            </div>
+            <hr>
+            {% empty %}
+            <div class="container mb-4 mt-4">
+                There are no Published Products
+            </div>
+            <hr>
+            {% endfor %}
+            <div class="container mb-4 mt-4">
+                <a href="{% url 'products:create' %}" class="text-decoration-none streched-link">
+                    <h6>Publish Products</h6>
+                </a>
+            </div>
+        </div>
+    </div>
+{% endblock container %}

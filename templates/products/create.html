@@ -1,13 +1,122 @@
 {% include 'base.html' %}
 
 {% block head_content %}
-    <title>Sell Products</title>
+    <title>Publish Product</title>
 {% endblock head_content %}
 
 
 {% block container %}
-    <div class="container">
-        {% csrf_token %}
-        {{form.as_p}}
+
+    <div class="container w-75">
+        <h1>Publish Product</h1>
     </div>
-{% endblock container %}
+    <div class="container w-75 border rounded">
+        {% if form.errors %}
+            <p>There were errors in the form:</p>
+            <ul>
+                {% for field in form %}
+                    {% for error in field.errors %}
+
+                        <li>{{field.name}}: {{ error }}</li>
+                    {% endfor %}
+                {% endfor %}
+            </ul>
+        {% endif %}
+        <form method="post" action="{% url 'products:create' %}">
+            {% csrf_token %}
+
+            {# name, brand and picture#}
+            <div class="mt-3">
+                <div class="row">
+                    <div class="col-md">
+                        {{form.name.label_tag}}
+                        {{form.name}}
+                    </div>
+                    <div class="col-md">
+                        {{form.brand.label_tag}}
+                        {{form.brand}}
+                    </div>
+                </div>
+            </div>
+
+            <!-- <div class="mt-3">
+                {{form.picture.label_tag}}
+                {{form.picture}}
+            </div> -->
+
+            {# description #}
+            <div class="mt-3">
+                {{form.description.label_tag}}
+                {{form.description}}
+            </div>
+
+            {# categories #}
+            <div class="mt-3">
+                {{form.categories.label_tag}}
+                <div class="row row-cols-5 mt-2">
+                    {% for category in form.categories %}
+                    <div class="col">
+                        {{category}}
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+
+            {# price, sku and stock quantity #}
+            <div class="mt-3">
+                <div class="row">
+                    <div class="col-md">
+                        {{form.price.label_tag}}
+                        <div class="input-group">
+                            <div class="input-group-text">$</div>
+                            {{form.price}}
+
+                        </div>
+                    </div>
+                    <div class="col-md">
+                        {{form.stock_qty.label_tag}}
+                        {{form.stock_qty}}
+                    </div>
+                    <div class="col-md">
+                        {{form.sku.label_tag}}
+                        {{form.sku}}
+                    </div>
+                </div>
+            </div>
+
+            {# attributes #}
+            <div class="mt-3">
+                {% if formset.errors %}
+                <p>There were errors in the formset:</p>
+                <p>{{formset.errors}}</p>
+                <ul>
+                    {% for error in formset.form_errors %}
+                     <li>{{error}}</li>
+                    {% endfor %}
+                </ul>
+
+                <ul>
+                    {% for error in formset.non_form_errors %}
+                        <li>{{ error }}</li>
+                    {% endfor %}
+                </ul>
+                {% endif %}
+
+                <h4>Attributes</h4>
+                {{ formset.management_form }}
+                <div class="row">
+                    {% for form in formset %}
+                    <div class="col-6 mb-3">
+                        {% for field in form %}
+                            {{field}}
+                        {% endfor %}
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+
+            <hr class="my-4">
+            <input class="btn btn-primary w-100 mb-3" type="submit" value="Save">
+        </form>
+    </div>
+{% endblock %}

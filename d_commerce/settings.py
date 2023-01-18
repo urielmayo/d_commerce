@@ -41,9 +41,9 @@ INSTALLED_APPS = [
 ]
 
 CUSTOM_APPS = [
-    'products',
-    'users',
-    'orders',
+    'apps.products',
+    'apps.users',
+    'apps.orders',
 ]
 
 INSTALLED_APPS += CUSTOM_APPS

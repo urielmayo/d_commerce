@@ -6,12 +6,8 @@
 
 
 {% block container %}
-    <div class="container">
-        <a href="{% url 'users:address-list' %}">Go Back</a>
-        <form method="post">
-            {% csrf_token %}
-            {{ form.as_ul}}
-            <input type="submit" value="Update">
-        </form>
+    <div class="container mt-5 w-75">
+        <h1>Edit Address</h1>
+        {% include 'users/address/form.html' %}
     </div>
 {% endblock container %}

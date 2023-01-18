@@ -32,6 +32,8 @@
                             <div class="card-body">
                                 <h6>Seller: {{product.seller.user.username}}</h6>
                                 <p>Stock Quantity: {{product.stock_qty}}</p>
+                                <br>
+                                <a class="btn btn-primary w-100" href="{% url 'products:add-to-cart' product.slug %}">Add to cart</a>
                             </div>
                         </div>
                     </div>
