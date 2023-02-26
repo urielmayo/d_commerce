@@ -1,6 +1,7 @@
 from django.db import models
 from django.contrib.auth.models import User
 from django.core.exceptions import ValidationError, ObjectDoesNotExist
+from django.core.validators import MinValueValidator, MaxValueValidator
 
 # Create your models here.
 class Profile(models.Model):
@@ -36,7 +37,11 @@ class ProfileAddress(models.Model):
         default='shipping',
         max_length=20
     )
-    profile = models.ForeignKey(Profile, on_delete=models.CASCADE)
+    profile = models.ForeignKey(
+        Profile,
+        on_delete=models.CASCADE,
+        related_name='addresses'
+    )
     main_street = models.CharField(max_length=100)
     number = models.PositiveSmallIntegerField()
     secondary_street = models.CharField(max_length=100, blank=True)
@@ -64,19 +69,41 @@ def only_numbers(value):
 class ProfilePayment(models.Model):
     """Model definition for ProfilePayment."""
 
-    profile = models.ForeignKey(Profile, on_delete=models.CASCADE)
+    profile = models.ForeignKey(
+        Profile,
+        on_delete=models.CASCADE,
+        related_name='payment_cards'
+    )
     card_number = models.CharField(
         max_length=16,
         unique=True,
         validators=[only_numbers,],
     )
     card_expiration_date = models.CharField(max_length=5)
+    card_expiration_month = models.SmallIntegerField(
+        blank=True, null=True,
+        validators=[MinValueValidator(1), MaxValueValidator(12)]
+    )
+    card_expiration_year = models.SmallIntegerField(
+        blank=True, null=True,
+        validators=[MinValueValidator(1970)]
+    )
+    card_provider = models.CharField(max_length=25, blank=True)
 
     class Meta:
         """Meta definition for ProfilePayment."""
 
         verbose_name = 'Profile Payment'
         verbose_name_plural = 'Profile Payments'
+
+    def get_card_expiration_date(self):
+        return f'{self.card_expiration_month}/{self.card_expiration_year}'
+
+    def __str__(self):
+        return f'{self.card_provider}: XXXX-{self.card_number[-4:]}  {self.get_card_expiration_date()}'
+
+    def get_last_digits(self):
+        return self.card_number[-4:]
 
 class ShoppingCart(models.Model):
     """Model definition for ShoppingCart."""
@@ -111,6 +138,20 @@ class ShoppingCart(models.Model):
             product_cart_line.save()
         except ObjectDoesNotExist:
             self.shopping_cart_lines.create(product=product)
+
+    def get_lines_vals(self):
+        lines = []
+        for line in self.shopping_cart_lines.all():
+            lines.append({
+                'product': line.product,
+                'quantity': line.quantity,
+                'unit_price': line.product.price,
+                'line_total': line.line_total
+            })
+        return lines
+
+    def empty(self):
+        self.shopping_cart_lines.all().delete()
 
 class ShoppingCartLine(models.Model):
     """Model definition for ShoppingCartLine."""

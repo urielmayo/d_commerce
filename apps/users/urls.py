@@ -8,25 +8,31 @@ cart_urls = [
     path('<int:pk>/remove', views.remove_item, name='remove_item'),
 ]
 
+adressess_urls = [
+    path('', views.ProfileAddressListView.as_view(), name='list'),
+    path('create/', views.ProfileAddressCreateView.as_view(), name='create'),
+    path('<int:pk>/', views.ProfileAddressUpdateView.as_view(), name='edit'),
+    path('<int:pk>/delete', views.delete_profile_address, name='delete'),
+]
+
+paymentcards_urls = [
+    path('', views.ProfilePaymentListView.as_view(), name='list'),
+    path('create/', views.ProfilePaymentCreateView.as_view(), name='create'),
+    path('<int:pk>/', views.ProfilePaymentUpdateView.as_view(), name='edit'),
+    path('<int:pk>/delete', views.delete_profile_payment, name='delete'),
+]
+
 urlpatterns = [
-    #users
     path('login/', views.LoginView.as_view(), name='login'),
     path('logout/', views.LogoutView.as_view(), name='logout'),
     path('signup/', views.SignUpView.as_view(),name='signup'),
 
     path('my-profile/', views.ProfileDetailView.as_view(), name='my-profile'),
-
-    path('my-profile/addresses/', views.ProfileAddressListView.as_view(), name='address-list'),
-    path('my-profile/addresses/create/', views.ProfileAddressCreateView.as_view(), name='create-address'),
-    path('my-profile/addresses/<int:pk>/', views.ProfileAddressUpdateView.as_view(), name='edit-address'),
-    path('my-profile/addresses/<int:pk>/delete', views.delete_profile_address, name='delete-address'),
-
-    path('my-profile/payment-cards/', views.ProfilePaymentListView.as_view(), name='paymentcard-list'),
-    path('my-profile/payment-cards/create/', views.ProfilePaymentCreateView.as_view(), name='create-paymentcard'),
-    path('my-profile/payment-cards/<int:pk>/', views.ProfilePaymentUpdateView.as_view(), name='edit-paymentcard'),
-    path('my-profile/payment-cards/<int:pk>/delete', views.delete_profile_payment, name='delete-paymentcard'),
-
+    path('my-profile/questions/', views.ProductQuestionListView.as_view(), name='questions'),
     path('my-profile/published-products/', views.PublishedProductsListView.as_view(), name='published-products'),
+    path('my_profile/received_products/<int:pk>/not_received', views.product_not_received, name='product-not-received'),
 
-    path('my-profile/cart/',include((cart_urls, 'cart')))
+    path('my-profile/cart/',include((cart_urls, 'cart'))),
+    path('my-profile/addresses/',include((adressess_urls, 'address'))),
+    path('my-profile/payment-cards/',include((paymentcards_urls, 'paymentcard'))),
 ]

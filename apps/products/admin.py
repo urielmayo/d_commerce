@@ -5,7 +5,8 @@ from apps.products.models import (
     Brand,
     Product,
     Attribute,
-    AttributeValue
+    ProductQuestion,
+    ProductReview
 )
 
 class AttributeInline(admin.TabularInline):
@@ -25,12 +26,10 @@ class ProductAdmin(admin.ModelAdmin):
     '''Admin View for Product'''
     inlines = [AttributeInline, ]
 
-class AttributeValueInline(admin.TabularInline):
-    '''Tabular Inline View for '''
-    model = AttributeValue
+@admin.register(ProductQuestion)
+class ProductQuestionAdmin(admin.ModelAdmin):
+    pass
 
-@admin.register(Attribute)
-class VariantAdmin(admin.ModelAdmin):
-    '''Admin View for Product'''
-
-    inlines = [AttributeValueInline,]
+@admin.register(ProductReview)
+class ProductReviewAdmin(admin.ModelAdmin):
+    pass

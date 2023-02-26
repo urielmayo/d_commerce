@@ -18,14 +18,22 @@ from django.urls import path, include
 from django.conf import settings
 from django.conf.urls.static import static
 from django.shortcuts import render
+from apps.notifications.models import Notification
 
 def home(request):
-    return render(request, 'home.html')
-
+    context = {}
+    if request.user.is_authenticated:
+        context['unread_notifications'] = Notification.objects.filter(
+            receiver=request.user.profile,
+            is_read=False
+        ).order_by('-created_at')[:3]
+    return render(request, 'home.html', context=context)
 
 urlpatterns = [
     path('admin/', admin.site.urls),
+    path('', home, name='home'),
     path('users/', include(('apps.users.urls', 'users'), namespace='users')),
     path('products/', include(('apps.products.urls', 'products'), namespace='products')),
-    path('', home, name='home')
+    path('orders/', include(('apps.orders.urls', 'orders'), namespace='orders')),
+    path('notifications/', include(('apps.notifications.urls', 'notifications'), namespace='notifications')),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

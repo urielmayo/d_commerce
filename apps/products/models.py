@@ -62,6 +62,13 @@ class Product(models.Model):
         null=True
     )
 
+    @property
+    def avg_score(self):
+        reviews = self.reviews.all()
+        if not reviews:
+            return 0
+        return round(sum(reviews.values_list('score', flat=True)) / reviews.count(), 1)
+
     class Meta:
         """Meta definition for Product."""
 
@@ -74,6 +81,16 @@ class Product(models.Model):
     def __str__(self):
         """Unicode representation of Product."""
         return self.name
+
+    def get_reviews_by_score(self):
+        """Get a dicttionary like this:
+        Key: score of the review (from 1 to 5)
+        Value: Number of review with this score
+        """
+        count = self.reviews.all().count()
+        if not count:
+            return {k: 0 for k in range(1,6)}
+        return {k: self.reviews.filter(score=k).count() / count * 100  for k in range(1,6)}
 
     def get_categories(self):
         return self.categories.all()
@@ -95,7 +112,7 @@ class Attribute(models.Model):
     """Model definition for Attribute."""
 
     name = models.CharField(max_length=50)
-    product = models.ForeignKey(Product, on_delete=models.CASCADE)
+    product = models.ForeignKey(Product, on_delete=models.CASCADE, related_name='attributes')
     value = models.CharField(max_length=20)
 
     class Meta:
@@ -107,22 +124,6 @@ class Attribute(models.Model):
     def __str__(self):
         """Unicode representation of Attribute."""
         return self.name
-
-class AttributeValue(models.Model):
-    """Model definition for AttributeValue."""
-
-    attribute = models.ForeignKey(Attribute, on_delete=models.CASCADE)
-    value = models.CharField(max_length=50)
-
-    class Meta:
-        """Meta definition for AttributeValue."""
-
-        verbose_name = 'Attribute Value'
-        verbose_name_plural = 'Attribute Values'
-
-    def __str__(self):
-        """Unicode representation of AttributeValue."""
-        return self.value
 
 class ProductQuestion(models.Model):
     """Model definition for ProductQuestion."""
@@ -171,13 +172,18 @@ class ProductReview(models.Model):
         ]
     )
     description = models.TextField(blank=True)
-    pub_date = models.DateTimeField(auto_now_add=False)
+    pub_date = models.DateTimeField(auto_now_add=True)
+    order_line = models.OneToOneField(
+        'orders.OrderLine',
+        on_delete=models.CASCADE,
+        null=True
+    )
 
     class Meta:
         """Meta definition for ProductReview."""
         constraints = [
             models.UniqueConstraint(
-                fields=['product', 'reviewer'],
+                fields=['order_line', 'reviewer'],
                 name='unique_product_review'
             )
         ]

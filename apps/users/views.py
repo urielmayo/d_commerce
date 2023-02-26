@@ -7,7 +7,9 @@ from django.contrib.auth.decorators import login_required
 
 from apps.users.forms import SignUpForm, ProfileAddressForm, ProfilePaymentForm
 from apps.users.models import Profile, ProfileAddress, ProfilePayment, ShoppingCart, ShoppingCartLine
-from apps.products.models import Product
+from apps.products.models import Product, ProductQuestion
+from apps.orders.models import OrderLine
+from apps.notifications.mixins import NotificationMixin
 # Create your views here.
 class SignUpView(FormView):
     """Users sign up view."""
@@ -32,7 +34,7 @@ class LogoutView(LoginRequiredMixin, auth_views.LogoutView):
     template_name = 'users/user/logged_out.html'
 
 
-class ProfileDetailView(LoginRequiredMixin, DetailView):
+class ProfileDetailView(LoginRequiredMixin, NotificationMixin, DetailView):
     model = Profile
     template_name = "users/user/profile.html"
 
@@ -40,7 +42,7 @@ class ProfileDetailView(LoginRequiredMixin, DetailView):
         return self.request.user.profile
 
 
-class ProfileAddressListView(LoginRequiredMixin, ListView):
+class ProfileAddressListView(LoginRequiredMixin, NotificationMixin, ListView):
     model = ProfileAddress
     template_name = "users/address/list.html"
     context_object_name = 'addresses'
@@ -52,36 +54,34 @@ class ProfileAddressListView(LoginRequiredMixin, ListView):
         return queryset
 
 
-class ProfileAddressCreateView(LoginRequiredMixin, CreateView):
+class ProfileAddressCreateView(LoginRequiredMixin, NotificationMixin, CreateView):
     model = ProfileAddress
     template_name = "users/address/create.html"
     form_class = ProfileAddressForm
-    success_url = reverse_lazy('users:address-list')
+    success_url = reverse_lazy('users:address:list')
 
-    def get_form_kwargs(self):
-        kwargs = super(ProfileAddressCreateView, self).get_form_kwargs()
-        kwargs.update({'request': self.request})
-        return kwargs
+    def form_valid(self, form):
+        form.instance.profile = self.request.user.profile
+        return super().form_valid(form)
 
+    def get_success_url(self):
+        if self.request.GET.get('from_order',False):
+            return reverse_lazy('orders:create')
+        return super().get_success_url()
 
-class ProfileAddressUpdateView(LoginRequiredMixin, UpdateView):
+class ProfileAddressUpdateView(LoginRequiredMixin, NotificationMixin, UpdateView):
     model = ProfileAddress
     template_name = "users/address/edit.html"
-    success_url = reverse_lazy('users:address-list')
+    success_url = reverse_lazy('users:address:list')
     form_class = ProfileAddressForm
-
-    def get_form_kwargs(self):
-        kwargs = super(ProfileAddressUpdateView, self).get_form_kwargs()
-        kwargs.update({'request': self.request})
-        return kwargs
 
 def delete_profile_address(request, pk):
     address = ProfileAddress.objects.get(pk=pk)
     address.delete()
-    return redirect('users:address-list')
+    return redirect('users:address:list')
 
 ## PROFILE PAYMENT VIEWS
-class ProfilePaymentListView(LoginRequiredMixin, ListView):
+class ProfilePaymentListView(LoginRequiredMixin, NotificationMixin, ListView):
     model = ProfilePayment
     template_name = "users/payments/list.html"
     context_object_name = 'payment_cards'
@@ -92,33 +92,41 @@ class ProfilePaymentListView(LoginRequiredMixin, ListView):
         )
         return queryset
 
-class ProfilePaymentCreateView(LoginRequiredMixin, CreateView):
+class ProfilePaymentCreateView(LoginRequiredMixin, NotificationMixin, CreateView):
     model = ProfilePayment
     template_name = "users/payments/create.html"
     form_class = ProfilePaymentForm
-    success_url = reverse_lazy('users:paymentcard-list')
+    success_url = reverse_lazy('users:paymentcard:list')
 
-    def get_form_kwargs(self):
-        kwargs = super(ProfilePaymentCreateView, self).get_form_kwargs()
-        kwargs.update({'request': self.request})
-        return kwargs
+    def form_valid(self, form):
+        card_provider = {
+            '3': 'American Express',
+            '4': 'Visa',
+            '5': 'Mastercard'
+        }
+        form.instance.profile = self.request.user.profile
+        form.instance.card_provider = card_provider.get(
+            form.instance.card_number[0], 'Other'
+        )
+        return super().form_valid(form)
 
-class ProfilePaymentUpdateView(LoginRequiredMixin, UpdateView):
+    def get_success_url(self):
+        if self.request.GET.get('from_order',False):
+            return reverse_lazy('orders:create')
+        return super().get_success_url()
+
+class ProfilePaymentUpdateView(LoginRequiredMixin, NotificationMixin, UpdateView):
     model = ProfilePayment
     template_name = "users/payments/edit.html"
-    success_url = reverse_lazy('users:paymentcard-list')
-
-    fields = [
-        'card_number',
-        'card_expiration_date'
-    ]
+    success_url = reverse_lazy('users:paymentcard:list')
+    form_class = ProfilePaymentForm
 
 def delete_profile_payment(request, pk):
     address = ProfilePayment.objects.get(pk=pk)
     address.delete()
-    return redirect('users:paymentcard-list')
+    return redirect('users:paymentcard:list')
 
-class PublishedProductsListView(LoginRequiredMixin, ListView):
+class PublishedProductsListView(LoginRequiredMixin, NotificationMixin, ListView):
     model = Product
     template_name = "users/published_products/list.html"
     context_object_name = 'published_products'
@@ -128,7 +136,7 @@ class PublishedProductsListView(LoginRequiredMixin, ListView):
             seller=self.request.user.profile
         )
 
-class ShoppingCartView(LoginRequiredMixin, DetailView):
+class ShoppingCartView(LoginRequiredMixin, NotificationMixin, DetailView):
     model = ShoppingCart
     template_name = 'users/cart.html'
     context_object_name = 'cart'
@@ -152,3 +160,33 @@ def remove_item(request, pk):
     line = get_object_or_404(ShoppingCartLine, pk=pk)
     line.delete()
     return redirect('users:cart:cart')
+
+
+class ProductQuestionListView(LoginRequiredMixin, NotificationMixin, ListView):
+    model = ProductQuestion
+    template_name = "products/questions/unanswered_questions.html"
+    context_object_name = 'unanswered_questions'
+
+    def get_queryset(self):
+        return ProductQuestion.objects.filter(
+            responder=self.request.user.profile,
+            answer=''
+        )
+
+    def get_context_data(self, **kwargs):
+        context =  super().get_context_data(**kwargs)
+        context['answered_questions'] = ProductQuestion.objects.filter(
+            responder=self.request.user.profile,
+        ).exclude(answer='')
+        return context
+
+@login_required
+def product_not_received(request, pk):
+    product_order = get_object_or_404(
+        OrderLine,
+        pk=pk,
+        order__customer=request.user.profile
+    )
+    product_order.status = 'in_transit'
+    product_order.save()
+    return redirect('home')

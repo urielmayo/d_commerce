@@ -1,5 +1,10 @@
 from django import forms
 from django.contrib.auth.models import User
+from django.core.exceptions import ValidationError
+from datetime import date
+
+from datetime import date
+from dateutil.relativedelta import relativedelta
 
 from apps.users.models import Profile, ProfileAddress, ProfilePayment, ShoppingCart
 class SignUpForm(forms.Form):
@@ -99,16 +104,6 @@ class ProfileAddressForm(forms.ModelForm):
             'type': forms.RadioSelect()
         }
 
-    def __init__(self, *args, **kwargs):
-        self.request = kwargs.pop("request")
-        super(ProfileAddressForm, self).__init__(*args, **kwargs)
-
-    def save(self):
-        data = self.cleaned_data
-        address = ProfileAddress(profile=self.request.user.profile, **data)
-        address.save()
-        return address
-
 class ProfilePaymentForm(forms.ModelForm):
     """Form definition for ProfilePayment."""
 
@@ -118,15 +113,33 @@ class ProfilePaymentForm(forms.ModelForm):
         model = ProfilePayment
         fields = (
             'card_number',
-            'card_expiration_date'
+            'card_expiration_month',
+            'card_expiration_year',
         )
+        widgets = {
+            'card_number': forms.TextInput(
+                attrs={'class': 'form-control', 'placeholder': 'XXXX XXXX XXXX XXXX'}
+            ),
+            'card_expiration_month': forms.Select(
+                choices=[(i, i) for i in range(1, 13)],
+                attrs={'class': 'form-control'}
+            ),
+            'card_expiration_year': forms.Select(
+                choices=[(i, i) for i in range(date.today().year, date.today().year + 30)],
+                attrs={'class': 'form-control'}
+            ),
+        }
 
-    def __init__(self, *args, **kwargs):
-        self.request = kwargs.pop("request")
-        super(ProfilePaymentForm, self).__init__(*args, **kwargs)
+    def clean(self):
+        cleaned_data =  super().clean()
 
-    def save(self):
-        data = self.cleaned_data
-        payment_card = ProfilePayment(profile=self.request.user.profile, **data)
-        payment_card.save()
-        return payment_card
+        month = cleaned_data['card_expiration_month']
+        year = cleaned_data['card_expiration_year']
+        # we ensure that the expration date is valid
+        last_card_expiration_day = date(year, month, 1) + relativedelta(days=31)
+        if date.today() > last_card_expiration_day:
+            raise ValidationError(
+                "Expiration date is outdated"
+            )
+
+        return cleaned_data
