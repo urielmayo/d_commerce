@@ -1,0 +1,33 @@
+{% extends 'base.html' %}
+
+
+{% block head_content %}
+    <title>Checkout</title>
+{% endblock head_content %}
+
+
+{% block container %}
+    <div class="row">
+        <div class="col-6 border-right">
+            {% include 'orders/form.html' %}
+        </div>
+        <div class="col-5">
+            <h3 class="mb-3">Summary</h3>
+            <ul class="list-group">
+                {% for line in cart.shopping_cart_lines.all %}
+                    <li class="list-group-item d-flex justify-content-between">
+                        <div>
+                            <h6>{{line.product}}</h6>
+                            <small>Quantity: {{line.quantity}}</small>
+                        </div>
+                        <span>{{line.line_total}}</span>
+                    </li>
+                {% endfor %}
+                    <li class="list-group-item d-flex justify-content-between">
+                        <span>Total</span>
+                        <strong>{{cart.total}}</strong>
+                    </li>
+            </ul>
+        </div>
+    </div>
+{% endblock container %}

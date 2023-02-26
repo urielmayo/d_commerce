@@ -2,25 +2,59 @@
 
 
 {% block head_content %}
-    <title> My Profile</title>
+    <title>My Profile</title>
 {% endblock head_content %}
 
 
 {% block container %}
 <div class="row">
+
     {# Attributes #}
     <div class="col-3 me-2">
+
+        <h4>Sales</h4>
         <ul class="list-group">
-            <a class="list-group-item" href="{% url 'users:address-list' %}">Addresses</a>
-            <a class="list-group-item" href="{% url 'users:paymentcard-list' %}">Payment Cards</a>
             <a class="list-group-item" href="{% url 'users:published-products' %}">Published Products</a>
-            <a class="list-group-item" href="#">Questions</a>
+            <a class="list-group-item" href="{% url 'users:questions' %}">Questions</a>
+            <a class="list-group-item" href="{% url 'orders:sales-list' %}">Sales</a>
         </ul>
+
+        <br>
+
+        <h4>Purchases</h4>
+        <ul class="list-group">
+            <a class="list-group-item" href="{% url 'users:address:list' %}">Addresses</a>
+            <a class="list-group-item" href="{% url 'users:paymentcard:list' %}">Payment Cards</a>
+            <a class="list-group-item" href="{% url 'orders:list' %}">My Orders</a>
+        </ul>
+
     </div>
 
     {# Dashboard #}
-    <div class="col-8 border rounded text-center">
-        <h1>Dashboard</h1>
+    <div class="col-8 border rounded">
+        <h1 class="mt-3">Notifications</h1>
+        <hr>
+        <ul class="list-group list-group-flush">
+
+            {% for notif in profile.received_notifications.all %}
+            <a href="{% url 'notifications:as_read' notif.pk%}" class="list-group-item list-group-item-action">
+                <div class="d-flex w-100 justify-content-between">
+                    <h5>
+                        {% if not notif.is_read %}
+                            <span class="badge rounded-pill bg-primary">New</span>
+                        {% endif %}
+                        {{notif.title}}
+                    </h5>
+                    <small class="text-muted">{{notif.created_at}}</small>
+                </div>
+                <small>{{notif.message}}</small>
+            </a>
+            {% empty %}
+            <li class="list-group-item">
+                <h2>There are no notifications</h2>
+            </li>
+            {% endfor %}
+        </ul>
     </div>
 </div>
 {% endblock container %}

@@ -8,7 +8,7 @@
 {% block container %}
     <div class="container">
         <div class="row">
-            <div class="col-6 justiy-content-center">
+            <div class="col-6 justiy-content-center ">
                 <img class="d-block mx-auto" height="350" width="350" src="{{product.picture.url}}">
             </div>
             <div class="col-6">
@@ -24,7 +24,12 @@
                                 <li class="text-muted">{{attribute.name}}: {{attribute.value}}</li>
                                 {% endfor %}
                             </ul>
-                            <p>Aca van las reviews</p>
+
+                            {% if product.reviews %}
+                            <strong>Reviews: {{product.avg_score}}</strong>
+                            <p class="text-muted">{{product.reviews.count}} reviews</p>
+                            {% endif %}
+
                         </div>
                     </div>
                     <div class="col">
@@ -50,6 +55,25 @@
             </div>
         </div>
         <hr>
+
+        <div class="card" style="background-color: rgb(248, 248, 248);">
+            <div class="card-body">
+                <h3 class="card-title">Attributes</h3>
+                <table class="table table-bordered">
+                    <tbody>
+                        {% for attr in product.attributes.all %}
+                            <tr>
+                                <td><strong>{{attr.name}}</strong></td>
+                                <td>{{attr.value}}</td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+
+            </div>
+        </div>
+        <hr>
+
 
         {# Questions #}
         <div class="card" style="background-color: rgb(248, 248, 248);">
@@ -89,13 +113,42 @@
         {# Reviews #}
         <div class="card" style="background-color: rgb(248, 248, 248);">
             <div class="card-body">
-                <h3 class="card-title">Reviews</h3>
+                <h2 class="card-title">Reviews</h2>
+                <hr>
+                <div class="row">
 
-                {% for review in product.reviews.all %}
-                    <h6></h6>
-                {% empty %}
-                    <p class="text-muted">There are no reviews yet</p>
-                {% endfor %}
+                    <div class="col-2">
+                        <h4>Score: <strong>{{product.avg_score}} / 5</strong></h4>
+                        {% for rating, count in product.get_reviews_by_score.items %}
+                        <div class="row align-items-center">
+                            <div class="col-10 align-items-center">
+                                <div class="progress"
+                                    role="progressbar"
+                                    aria-label="Basic example"
+                                    aria-valuenow="{{count}}"
+                                    aria-valuemin="0"
+                                    aria-valuemax="{{product.reviews.all.count}}"
+                                    style="height: 2px">
+                                        <div class="progress-bar" style="width: {{count}}%;"></div>
+                                </div>
+                            </div>
+                            <div class="col-1">
+                                {{rating}}
+                            </div>
+                        </div>
+                        {% endfor %}
+                    </div>
+
+                    <div class="col-10">
+                        {% for review in product.reviews.all %}
+                            <h5 class="card-subtitle mt-1 mb-1">{{review.score}}/5</h5>
+                            <p class="card-text">{{review.description}}</p>
+                        {% empty %}
+                            <p class="text-muted">There are no reviews yet</p>
+                        {% endfor %}
+                    </div>
+
+                </div>
             </div>
         </div>
         <br>

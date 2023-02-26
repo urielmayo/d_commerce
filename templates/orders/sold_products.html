@@ -1,0 +1,46 @@
+{% extends 'base.html' %}
+
+
+{% block head_content %}
+    <title>My Sales</title>
+{% endblock head_content %}
+
+
+{% block container %}
+    <div class="container">
+        <h2>Sales</h2>
+        <table class="table">
+            <thead>
+                <tr>
+                    <th scope="col">Order #</th>
+                    <th scope="col">Product</th>
+                    <th scope="col">Quantity</th>
+                    <th scope="col">Status</th>
+                    <th scope="col"><i class="bi bi-three-dots-vertical"></i></th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for sale in sold_products %}
+                <tr>
+                    <th scope="row">{{sale.order.pk}}</th>
+                    <td>{{sale.product}}</td>
+                    <td>{{sale.quantity}}</td>
+                    <td>{{sale.get_status_display}}</td>
+
+                    {% if sale.status == 'to_ship' %}
+                    <td><a href="{% url 'orders:ship-product' sale.pk%}">Ship Product</a></td>
+                    {% elif sale.status == 'in_transit' %}
+                    <td><a href="{% url 'orders:deliver-product' sale.pk%}">Deliver Product</a></td>
+                    {% endif %}
+
+                </tr>
+                {% empty %}
+                <tr>
+                    <td colspan="5"> There are no sales yet.</td>
+                </tr>
+                {% endfor %}
+
+            </tbody>
+        </table>
+    </div>
+{% endblock container %}

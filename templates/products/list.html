@@ -12,12 +12,15 @@
             <div class="col-2 justify-content center rounded" style="background-color: rgb(248, 248, 248);">
                 <div class="card mt-2">
                     <div class="card-body">
-                        <h6 class="card-title">Categories</h6>
-                        {% for category in categories %}
-                        <ul>
-                            <li><a href="{% url 'products:list' %}?search={{search_val | urlencode}}&category={{category | urlencode}}">{{category}}</a></li>
+                        <ul class="list-group list-group-flush">
+                            <li class="list-group-item">Categories</li>
+                            {% for category in categories %}
+                            <a  class="list-group-item"
+                                href="{% url 'products:list' %}?search={{search_val | urlencode}}&category={{category | urlencode}}">
+                                {{category}}
+                            </a>
+                            {% endfor %}
                         </ul>
-                        {% endfor %}
                     </div>
                 </div>
             </div>
@@ -31,9 +34,9 @@
                         </div>
                         <div class="col">
                             <div class="card-body">
-                                <h5 class="card-title">{{product.name}}</h5>
-                                <p class="card-text">{{product.price}}</p>
-                                <a href="{% url 'products:detail' product.slug %}" class="btn btn-primary stretched-link">Check</a>
+                                <p class="card-title fw-light">{{product.name}}</p>
+                                <h3 class="card-text">$ {{product.price}}</h3>
+                                <a href="{% url 'products:detail' product.slug %}" class="stretched-link"></a>
                             </div>
                         </div>
                     </div>

@@ -16,12 +16,13 @@
                 <div class="container mb-4 mt-4">
                     <div class="row align-items-center">
                         <div class="col-2">
-                            <img src="{{line.product.picture.url}}" height="100px" width="100px">
+                            <img src="{{line.product.picture.url}}" height="120px" width="120px">
                         </div>
                         <div class="col">
-                            {{ line.product.name }}
+                            <h5>{{ line.product.name }}</h5>
                         </div>
                         <div class="col-auto me-5 text-center gy-2">
+                            <p class="text-muted">{{line.product.stock_qty}} available</p>
                             <ul class="list-group list-group-horizontal">
 
                                 {% if line.quantity == 1 %}
@@ -31,13 +32,20 @@
                                 {% endif %}
 
                                 <li class="list-group-item">{{ line.quantity }}</li>
+
+                                {% if line.quantity == line.product.stock_qty %}
+                                <li class="list-group-item disabled" aria-disabled="true"><i class="bi bi-plus-lg"></i></li>
+                                {% else %}
                                 <li class="list-group-item "><a href="{% url 'users:cart:change-qty' line.pk %}?type=add"><i class="bi bi-plus-lg"></i></a></li>
+
+                                {% endif %}
+
                             </ul>
                             <br>
                             <a class="mt-1" href="{% url 'users:cart:remove_item' line.pk %}">Remove</a>
                         </div>
                         <div class="col-auto">
-                            <strong> {{line.line_total}} </strong>
+                            <strong>$ {{line.line_total}}</strong>
                         </div>
                     </div>
                 </div>
@@ -51,6 +59,8 @@
                     <p>Add some products and keep on Shopping on <a href="{% url 'home' %}">d-commerce.com</a></p>
                 </div>
             {% endfor %}
+
+            {% if not cart.is_empty %}
             <hr>
             <div class="container mb-4 mt-4">
                 <div class="row justify-content-evenly">
@@ -58,12 +68,15 @@
                         <h3>Total:</h3>
                     </div>
                     <div class="col-auto">
-                        <h3>{{cart.total}}</h3>
+                        <h3>$ {{cart.total}}</h3>
                     </div>
                 </div>
             </div>
-
-
+            <hr>
+            <div class="d-flex justify-content-end mb-4 mt-4">
+                <a href="{% url 'orders:create' %}" class="btn btn-lg btn-primary">Checkout</a>
+            </div>
+            {% endif %}
         </div>
     </div>
 {% endblock container %}

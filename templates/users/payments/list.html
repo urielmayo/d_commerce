@@ -16,14 +16,14 @@
             <div class="container mb-4 mt-4">
                 <div class="row align-items-center">
                     <div class="col align-items-center">
-                        {{ card.card_number }} | {{ card.card_expiration_date }}
+                        {{card}}
                     </div>
                     <div class="col-auto">
                         <div class="btn-group">
-                            <a class="btn btn-primary" href="{% url 'users:edit-paymentcard' card.pk %}">
+                            <a class="btn btn-primary" href="{% url 'users:paymentcard:edit' card.pk %}">
                                 <i class="bi bi-pencil-square"></i>
                             </a>
-                            <a class="btn btn-danger" href="{% url 'users:delete-paymentcard' card.pk %}">
+                            <a class="btn btn-danger" href="{% url 'users:paymentcard:delete' card.pk %}">
                                 <i class="bi bi-trash3-fill"></i>
                             </a>
                         </div>
@@ -38,7 +38,7 @@
             <hr>
             {% endfor %}
             <div class="container mb-4 mt-4">
-                <a href="{% url 'users:create-paymentcard' %}" class="text-decoration-none streched-link">
+                <a href="{% url 'users:paymentcard:create' %}" class="text-decoration-none streched-link">
                     <h6>Add Card</h6>
                 </a>
             </div>

@@ -1,0 +1,27 @@
+<form method="post" action="{% url 'orders:create' %}">{% csrf_token %}
+    <div class="row align-items-center gx-2">
+        <div class="col-auto">
+            <h3>Shipping Address</h3>
+        </div>
+        <div class="col-1">
+            <a class="btn btn-sm btn-outline-primary rounded-pill" href="{% url 'users:address:create' %}?from_order=true">
+                <i class="bi bi-plus-lg"></i>
+            </a>
+        </div>
+    </div>
+    {{ form.customer_shipping_address }}
+
+    <div class="row align-items-center gx-2 mt-3">
+        <div class="col-auto">
+            <h3>Payment Card</h3>
+        </div>
+        <div class="col-1">
+            <a class="btn btn-sm btn-outline-primary rounded-pill" href="{% url 'users:paymentcard:create' %}?from_order=true">
+                <i class="bi bi-plus-lg"></i>
+            </a>
+        </div>
+    </div>
+    {{form.customer_payment}}
+    <br>
+    <button class="btn w-100 btn-primary " type="submit">Confirm Order</button>
+</form>

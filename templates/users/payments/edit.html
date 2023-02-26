@@ -6,12 +6,16 @@
 
 
 {% block container %}
-    <div class="container">
-        <a href="{% url 'users:paymentcard-list' %}">Go Back</a>
-        <form method="post">
-            {% csrf_token %}
-            {{ form.as_ul}}
-            <input type="submit" value="Update">
-        </form>
+<div class="container mt-5">
+    <div class="col-md-6 mx-auto">
+        <div class="card">
+            <div class="card-header">
+                <h5 class="card-title">Edit Credit Card Information</h5>
+            </div>
+            <div class="card-body">
+                {% include 'users/payments/form.html' %}
+            </div>
+        </div>
     </div>
+</div>
 {% endblock container %}

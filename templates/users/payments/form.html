@@ -1,0 +1,21 @@
+<form method="post">{% csrf_token %}
+
+    {{form.non_field_errors}}
+
+    <div class="row g-3">
+        <div class="col-12">
+            {{form.card_number.label_tag}}
+            {{form.card_number}}
+            {{form.card_number.errors}}
+        </div>
+        <div class="col-6">
+            {{form.card_expiration_month.label_tag}}
+            {{form.card_expiration_month}}
+        </div>
+        <div class="col-6">
+            {{form.card_expiration_year.label_tag}}
+            {{form.card_expiration_year}}
+        </div>
+    </div>
+    <button type="submit" class="btn btn-primary w-100 mt-3">Submit</button>
+</form>

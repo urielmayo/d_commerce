@@ -1,0 +1,73 @@
+{% extends 'base.html' %}
+
+
+{% block head_content %}
+    <title>Received Questions</title>
+{% endblock head_content %}
+
+
+{% block container %}
+<nav>
+    <div class="nav nav-tabs nav-fill" id="nav-tab" role="tablist">
+        <button class="nav-link active"
+            id="unanswered-questions"
+            data-bs-toggle="tab"
+            data-bs-target="#nav-home"
+            type="button"
+            role="tab"
+            aria-controls="nav-home"
+            aria-selected="true">
+            Unanswered
+        </button>
+        <button class="nav-link"
+            id="answered-questions"
+            data-bs-toggle="tab"
+            data-bs-target="#nav-profile"
+            type="button"
+            role="tab"
+            aria-controls="nav-profile"
+            aria-selected="false">
+            Answered
+        </button>
+    </div>
+</nav>
+<div class="tab-content" id="nav-tabContent">
+
+    <div class="tab-pane fade show active" id="nav-home" role="tabpanel" aria-labelledby="unanswered-questions">
+        <h2 class="mt-3">Unanswered Questions</h2>
+        <hr>
+        {% for question in unanswered_questions %}
+        <div class="card mt-3">
+            <div class="card-header">Product: {{question.product}}</div>
+            <div class="card-body">
+                <p>Question: {{question.question}}</p>
+                <form action="{% url 'products:answer-question' question.product.slug question.pk%}" method="post">
+                    {% csrf_token %}
+                    <input class="form-control" type="text" name="answer" placeholder="Answer question..." required>
+                </form>
+            </div>
+        </div>
+        {% empty %}
+        <div class="card" style="height: 200px;">
+            <div class="card-body">
+                <h5 class="card-title">You have answered every question. Good job!</h5>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+
+    <div class="tab-pane fade" id="nav-profile" role="tabpanel" aria-labelledby="answered-questions">
+        <h2 class="mt-3">Answered Questions</h2>
+        <hr>
+        {% for question in answered_questions %}
+        <div class="card mb-3">
+            <div class="card-header">Product: {{question.product}}</div>
+            <div class="card-body">
+                <p>Question: {{question.question}}</p>
+                <p>Answer: {{question.answer}}</p>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+{% endblock container %}

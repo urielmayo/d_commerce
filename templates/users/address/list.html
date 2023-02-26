@@ -20,10 +20,10 @@
                     </div>
                     <div class="col-auto">
                         <div class="btn-group">
-                            <a class="btn btn-primary" href="{% url 'users:edit-address' address.pk %}">
+                            <a class="btn btn-primary" href="{% url 'users:address:edit' address.pk %}">
                                 <i class="bi bi-pencil-square"></i>
                             </a>
-                            <a class="btn btn-danger" href="{% url 'users:delete-address' address.pk %}">
+                            <a class="btn btn-danger" href="{% url 'users:address:delete' address.pk %}">
                                 <i class="bi bi-trash3-fill"></i>
                             </a>
                         </div>
@@ -38,7 +38,7 @@
             <hr>
             {% endfor %}
             <div class="container mb-4 mt-4">
-                <a href="{% url 'users:create-address' %}" class="text-decoration-none streched-link">
+                <a href="{% url 'users:address:create' %}" class="text-decoration-none streched-link">
                     <h6>Add Address</h6>
                 </a>
             </div>

@@ -1,42 +1,60 @@
 {% load static %}
 <nav class="navbar navbar-expand-lg" style="background-color: #0C4B33;">
     <div class="container-fluid">
-        <div class="col-2">
-            <a class="navbar-brand text-white" href="{% url 'home' %}">D - COMMERCE</a>
-        </div>
-        <div class="col-6">
-            <form class="d-flex" role="search" action="{% url 'products:list' %}">
-                <div class="input-group">
-                    <input class="form-control" name="search" value="{{search_val}}" type="search" placeholder="Search" aria-label="Search">
-                    <button class="btn btn-light" type="submit"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-search" viewBox="0 0 16 16">
-                        <path d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001c.03.04.062.078.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1.007 1.007 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0z"/>
-                    </svg></button>
-                </div>
-            </form>
-        </div>
-        <div class="col-1 offset-2">
-            <a href="{% url 'users:cart:cart' %}" class="nav-link text-white"><i class="bi bi-cart4"></i> Cart</a>
-        </div>
-        <div class="col-1">
-            <ul class="navbar-nav me-auto">
+
+        <a class="navbar-brand text-white me-5" href="{% url 'home' %}">D - COMMERCE</a>
+
+        <form class="d-flex flex-grow-1 me-5" role="search" action="{% url 'products:list' %}">
+            <div class="input-group">
+                <input class="form-control" name="search" value="{{search_val}}" type="search" placeholder="Search" aria-label="Search">
+                <button class="btn btn-light" type="submit"><i class="bi bi-search"></i></button>
+            </div>
+        </form>
+
+        <ul class="navbar-nav">
+            {% if request.user.is_authenticated %}
+                <li class="nav-item">
+                    <a href="{% url 'users:cart:cart' %}" class="nav-link text-white"><i class="bi bi-cart-fill"></i> Cart</a>
+                </li>
+
+                <li class="nav-item dropdown">
+                    <a class="nav-link text-white" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                        <i class="bi bi-bell-fill"></i>
+                    </a>
+                    <ul class="dropdown-menu dropdown-menu-end">
+
+                        {% for notification in unread_notifications %}
+                        <li><a class="dropdown-item" href="{% url 'notifications:as_read' notification.pk%}">{{notification.title}}</a></li>
+                        {% empty%}
+                        <li>
+                            <div class="container text-muted"> There are no notifications</div>
+                        </li>
+                        {% endfor %}
+
+                    </ul>
+                </li>
+            {% endif %}
+
+            <li>
                 {% if request.user.is_anonymous %}
-                    <li class="nav-item">
-                        <a class="nav-link text-white" href="{% url 'users:login' %}">Login</a>
-                    </li>
+                <li class="nav-item">
+                    <a class="nav-link text-white" href="{% url 'users:login' %}">Login</a>
+                </li>
                 {% else %}
-                    <li class="nav-item dropdown">
-                        <a class="nav-link dropdown-toggle text-white" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                            {{request.user.username}}
-                        </a>
-                        <ul class="dropdown-menu dropdown-menu-end">
-                            <li><a class="dropdown-item" href="{% url 'users:my-profile'%}">Profile</a></li>
-                            <li><a class="dropdown-item" href="{% url 'products:create' %}">Publish Product</a></li>
-                            <li><hr class="dropdown-divider"></li>
-                            <li><a class="dropdown-item" href="{% url 'users:logout' %}">Log out</a></li>
-                        </ul>
-                    </li>
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle text-white" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                        {{request.user.username}}
+                    </a>
+                    <ul class="dropdown-menu dropdown-menu-end">
+                        <li><a class="dropdown-item" href="{% url 'users:my-profile'%}">Profile</a></li>
+                        <li><a class="dropdown-item" href="{% url 'products:create' %}">Publish Product</a></li>
+                        <li><hr class="dropdown-divider"></li>
+                        <li><a class="dropdown-item" href="{% url 'users:logout' %}">Log out</a></li>
+                    </ul>
+                </li>
                 {% endif %}
-            </ul>
-        </div>
+            </li>
+
+        </ul>
     </div>
 </nav>

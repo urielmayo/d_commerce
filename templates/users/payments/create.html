@@ -1,14 +1,21 @@
+{% extends 'base.html' %}
+
 {% block head_content %}
 <title> My Profile | Add Card</title>
 {% endblock head_content %}
 
 
 {% block container %}
-<div class="container border rounded">
-    <form method="post">
-        {% csrf_token %}
-        {{ form.as_ul }}
-        <input type="submit" value="Add">
-    </form>
+<div class="container mt-5">
+    <div class="col-md-6 mx-auto">
+        <div class="card">
+            <div class="card-header">
+                <h5 class="card-title">Enter Credit Card Information</h5>
+            </div>
+            <div class="card-body">
+                {% include 'users/payments/form.html' %}
+            </div>
+        </div>
+    </div>
 </div>
 {% endblock container %}

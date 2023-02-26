@@ -1,0 +1,88 @@
+{% extends 'base.html' %}
+
+{% block head_content %}
+    <title>My Orders</title>
+{% endblock head_content %}
+
+
+{% block container %}
+<div class="container w-100">
+    <div class="d-flex align-items-center mb-3">
+        <h2 class="me-2">My Orders</h2>
+        <div class="vr me-2"></div>
+        <h4 class="text-muted">{{orders.count}}</h4>
+    </div>
+    {% for order in orders %}
+    <div class="card mb-5">
+        <div class="card-header">
+            <div class="d-flex justify-content-between gy-1">
+                <div class="p-1">{{order.create_date|date:"SHORT_DATE_FORMAT"}}</div>
+                <div class="p-1">Order #{{order.pk}} | Status: {{order.status.capitalize}}</div>
+            </div>
+        </div>
+        <div class="card-body">
+            <div class="row align-items-center">
+                <div class="col-8">
+                    <h5 class="ms-3 mb-3">Items</h5>
+                    <ul class="list-group list-group-flush">
+                        {% for line in order.order_lines.all %}
+                            <div class="list-group-item d-flex">
+                                <div class="d-flex-shrink-0">
+                                    <img src="{{line.product.picture.url}}" width="60" height="60">
+                                </div>
+                                <div class="d-flex flex-column ms-3">
+                                    <div class="p-0"><h5>{{line.product.name}}</h5></div>
+                                    <div class="p-0 text-muted">Quantity: {{line.quantity}}</div>
+                                </div>
+                                <div class="d-flex flex-column ms-auto align-items-center">
+                                    <div class="p-0">
+                                        <strong class="text-primary">{{line.product.seller}}</strong>
+                                    </div>
+                                    <div class="p-0 {{line.get_status_color}} mb-1">
+                                        <strong>{{line.get_status_display.upper}}</strong>
+                                    </div>
+
+                                    {% if line.status == 'delivered' %}
+
+                                        <div class="p-0">
+                                        {% if line.productreview %}
+                                            <p>Rating: {{line.productreview.score}}/5</p>
+                                        {% else %}
+                                            <a href="{% url 'orders:add-review' line.pk %}" class="btn btn-light btn-sm">Leave Review</a>
+                                        {% endif %}
+
+                                        </div>
+                                    {% endif %}
+                                </div>
+                            </div>
+                        {% endfor %}
+                    </ul>
+                </div>
+                <div class="col-4 ">
+                    <h5>Details</h5>
+                    <div class="d-flex justify-content-between mt-1">
+                        <div class="p-0">Total:</div>
+                        <div class="p-0">${{order.total}}</div>
+                    </div>
+                    <hr class="my-1">
+                    <div class="d-flex justify-content-between mt-1">
+                        <div class="p-0">Send to:</div>
+                        <div class="p-0">{{order.customer_shipping_address}}</div>
+                    </div>
+                    <hr class="my-1">
+                    <div class="d-flex justify-content-between">
+                        <div class="p-0">Payment:</div>
+                        <div class="p-0">{{order.customer_payment.card_provider}} {{order.customer_payment.get_last_digits}}</div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+    {% empty %}
+    <div class="d-flex mb-4 mt-4">
+        There are no orders. Start Shopping!
+    </div>
+    {% endfor %}
+</div>
+{% endblock container %}
