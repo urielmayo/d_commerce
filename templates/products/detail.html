@@ -24,10 +24,9 @@
                                 <li class="text-muted">{{attribute.name}}: {{attribute.value}}</li>
                                 {% endfor %}
                             </ul>
-
+                            <br>
                             {% if product.reviews %}
-                            <strong>Reviews: {{product.avg_score}}</strong>
-                            <p class="text-muted">{{product.reviews.count}} reviews</p>
+                            <div>{% include 'products/stars.html' %}</div>
                             {% endif %}
 
                         </div>
