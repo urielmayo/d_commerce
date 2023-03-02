@@ -181,12 +181,15 @@ class ProductQuestionListView(LoginRequiredMixin, NotificationMixin, ListView):
         return context
 
 @login_required
-def product_not_received(request, pk):
-    product_order = get_object_or_404(
-        OrderLine,
-        pk=pk,
-        order__customer=request.user.profile
-    )
-    product_order.status = 'in_transit'
-    product_order.save()
-    return redirect('home')
+def update_stock_qty(request, pk):
+    if request.method == 'POST' and request.POST.get('new_stock_qty'):
+        new_stock_qty = int(request.POST.get('new_stock_qty'))
+        if new_stock_qty >= 0:
+            product = get_object_or_404(
+                Product,
+                pk=pk,
+                seller=request.user.profile
+            )
+            product.stock_qty = new_stock_qty
+            product.save()
+    return redirect('users:published-products')

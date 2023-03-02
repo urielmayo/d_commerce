@@ -30,7 +30,7 @@ urlpatterns = [
     path('my-profile/', views.ProfileDetailView.as_view(), name='my-profile'),
     path('my-profile/questions/', views.ProductQuestionListView.as_view(), name='questions'),
     path('my-profile/published-products/', views.PublishedProductsListView.as_view(), name='published-products'),
-    path('my_profile/received_products/<int:pk>/not_received', views.product_not_received, name='product-not-received'),
+    path('my_profile/published-products/<int:pk>/update_qty/', views.update_stock_qty, name='update_qty'),
 
     path('my-profile/cart/',include((cart_urls, 'cart'))),
     path('my-profile/addresses/',include((adressess_urls, 'address'))),
