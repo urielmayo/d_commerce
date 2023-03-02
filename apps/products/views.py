@@ -4,6 +4,7 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth.decorators import login_required
 from django.urls import reverse_lazy
 from django.http import HttpResponseRedirect
+from django.db.models import Q
 
 from apps.products.models import Product,ProductQuestion, Brand, ProductReview
 from apps.products.forms import ProductForm, AttributeFormSet, ProductReviewForm
@@ -20,9 +21,13 @@ class ProductListView(NotificationMixin, ListView):
     def get_queryset(self):
         keyword = self.request.GET.get('search', '')
         category = self.request.GET.get('category', '')
-        queryset = Product.objects.exclude(seller=self.request.user.profile)
+        queryset = Product.objects.exclude(
+            Q(seller=self.request.user.profile) | Q(stock_qty=0)
+        )
         if keyword:
-            queryset = queryset.filter(name__icontains=keyword)
+            queryset = queryset.filter(
+                Q(name__icontains=keyword) | Q(brand__name__icontains=keyword)
+            )
         if category:
             queryset = queryset.filter(categories__name=category)
         return queryset
@@ -43,7 +48,10 @@ class ProductDetailView(NotificationMixin, DetailView):
     context_object_name = 'product'
 
     def get_queryset(self):
-        return Product.objects.exclude(seller=self.request.user.profile)
+        return Product.objects.exclude(
+            Q(seller=self.request.user.profile) | Q(stock_qty=0)
+        )
+
 
 class ProductCreateView(LoginRequiredMixin, NotificationMixin, CreateView):
     """ Create view for Product model"""
