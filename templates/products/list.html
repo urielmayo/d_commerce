@@ -1,7 +1,9 @@
-{% include 'base.html' %}
+{% extends 'base.html' %}
+{% load static %}
 
 {% block head_content %}
     <title>D - Commerce</title>
+    <link rel="stylesheet" type="text/css" href="{% static 'css/stars.css' %}"/>
 {% endblock head_content %}
 
 
@@ -27,16 +29,19 @@
 
             <div class="col-10">
                 {% for product in products %}
-                <div class="card">
-                    <div class="row mb-2 mt-2">
-                        <div class="col-auto">
-                            <img class="img-fluid" width="160" height="160" src="{{product.picture.url}}">
-                        </div>
-                        <div class="col">
-                            <div class="card-body">
-                                <p class="card-title fw-light">{{product.name}}</p>
-                                <h3 class="card-text">$ {{product.price}}</h3>
+                <div class="card mb-2">
+                    <div class="card-body">
+                        <div class="d-flex">
+                            <div class="flex-shrink-0">
+                                <img class="img-fluid" width="160" height="160" src="{{product.picture.url}}">
+                            </div>
+                            <div class="d-flex flex-column ms-5">
+                                <div class="p-1"><p>{{product.name}}</p></div>
+                                <div class="p-1"><h4 class="card-text">$ {{product.price}}</h4></div>
                                 <a href="{% url 'products:detail' product.slug %}" class="stretched-link"></a>
+                                <div class="p-1">
+                                    {% include 'products/stars.html' %}
+                                </div>
                             </div>
                         </div>
                     </div>
