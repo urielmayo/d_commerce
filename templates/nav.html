@@ -1,4 +1,3 @@
-{% load static %}
 <nav class="navbar navbar-expand-lg" style="background-color: #0C4B33;">
     <div class="container-fluid">
 
@@ -27,9 +26,11 @@
                         <li><a class="dropdown-item" href="{% url 'notifications:as_read' notification.pk%}">{{notification.title}}</a></li>
                         {% empty%}
                         <li>
-                            <div class="container text-muted"> There are no notifications</div>
+                            <div class="container text-muted">There are no unread notifications</div>
                         </li>
                         {% endfor %}
+                        <li><hr class="dropdown-divider"></li>
+                        <li><a class="dropdown-item" href="{% url 'users:my-profile' %}">Check all notifications</a></li>
 
                     </ul>
                 </li>
