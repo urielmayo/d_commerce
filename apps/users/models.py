@@ -79,7 +79,6 @@ class ProfilePayment(models.Model):
         unique=True,
         validators=[only_numbers,],
     )
-    card_expiration_date = models.CharField(max_length=5)
     card_expiration_month = models.SmallIntegerField(
         blank=True, null=True,
         validators=[MinValueValidator(1), MaxValueValidator(12)]
@@ -99,11 +98,12 @@ class ProfilePayment(models.Model):
     def get_card_expiration_date(self):
         return f'{self.card_expiration_month}/{self.card_expiration_year}'
 
-    def __str__(self):
-        return f'{self.card_provider}: XXXX-{self.card_number[-4:]}  {self.get_card_expiration_date()}'
-
     def get_last_digits(self):
         return self.card_number[-4:]
+
+    def __str__(self):
+        return f'{self.card_provider}: XXXX-{self.get_last_digits()}  {self.get_card_expiration_date()}'
+
 
 class ShoppingCart(models.Model):
     """Model definition for ShoppingCart."""
