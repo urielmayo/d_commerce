@@ -3,7 +3,7 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth.decorators import login_required
 from django.urls import reverse_lazy
 from django.shortcuts import get_object_or_404, redirect
-from django.core.exceptions import PermissionDenied
+from django.contrib.messages.views import SuccessMessageMixin
 
 from apps.orders.models import Order, OrderLine
 from apps.orders.forms import OrderForm
@@ -12,11 +12,12 @@ from apps.notifications.models import Notification
 from apps.notifications.mixins import NotificationMixin
 # Create your views here.
 
-class OrderCreateView(CartNotEmptyMixin, NotificationMixin, CreateView):
+class OrderCreateView(CartNotEmptyMixin, NotificationMixin, SuccessMessageMixin, CreateView):
     model = Order
     template_name = "orders/create.html"
     form_class = OrderForm
     success_url = reverse_lazy('orders:list')
+    success_message = "Order created succesfully!"
 
     def get_context_data(self, **kwargs):
         context = super(OrderCreateView, self).get_context_data(**kwargs)

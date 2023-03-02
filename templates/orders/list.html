@@ -7,6 +7,15 @@
 
 {% block container %}
 <div class="container w-100">
+
+
+    {% for msg in messages %}
+    <div class="alert alert-success alert-dismissible fade show" role="alert">
+        <strong>{{msg}}</strong>
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
+    {% endfor %}
+
     <div class="d-flex align-items-center mb-3">
         <h2 class="me-2">My Orders</h2>
         <div class="vr me-2"></div>
