@@ -1,0 +1,44 @@
+
+{% if product.avg_score|floatformat:0 == '5' %}
+<i class="fa fa-star" style="color:#fbc634 !important;"></i>
+<i class="fa fa-star" style="color:#fbc634 !important;"></i>
+<i class="fa fa-star" style="color:#fbc634 !important;"></i>
+<i class="fa fa-star" style="color:#fbc634 !important;"></i>
+<i class="fa fa-star" style="color:#fbc634 !important;"></i>
+{% elif product.avg_score|floatformat:0 == '4' %}
+<i class="fa fa-star" style="color:#fbc634 !important;"></i>
+<i class="fa fa-star" style="color:#fbc634 !important;"></i>
+<i class="fa fa-star" style="color:#fbc634 !important;"></i>
+<i class="fa fa-star" style="color:#fbc634 !important;"></i>
+<i class="fa fa-star" style="color:#cbcbcb !important;"></i>
+{% elif product.avg_score|floatformat:0 == '3' %}
+<i class="fa fa-star" style="color:#fbc634 !important;"></i>
+<i class="fa fa-star" style="color:#fbc634 !important;"></i>
+<i class="fa fa-star" style="color:#fbc634 !important;"></i>
+<i class="fa fa-star" style="color:#cbcbcb !important;"></i>
+<i class="fa fa-star" style="color:#cbcbcb !important;"></i>
+{% elif product.avg_score|floatformat:0 == '2' %}
+<i class="fa fa-star" style="color:#fbc634 !important;"></i>
+<i class="fa fa-star" style="color:#fbc634 !important;"></i>
+<i class="fa fa-star" style="color:#cbcbcb !important;"></i>
+<i class="fa fa-star" style="color:#cbcbcb !important;"></i>
+<i class="fa fa-star" style="color:#cbcbcb !important;"></i>
+{% elif product.avg_score|floatformat:0 == '1' %}
+<i class="fa fa-star" style="color:#fbc634 !important;"></i>
+<i class="fa fa-star" style="color:#cbcbcb !important;"></i>
+<i class="fa fa-star" style="color:#cbcbcb !important;"></i>
+<i class="fa fa-star" style="color:#cbcbcb !important;"></i>
+<i class="fa fa-star" style="color:#cbcbcb !important;"></i>
+{% elif product.avg_score|floatformat:0 == '0' %}
+<i class="fa fa-star" style="color:#cbcbcb !important;"></i>
+<i class="fa fa-star" style="color:#cbcbcb !important;"></i>
+<i class="fa fa-star" style="color:#cbcbcb !important;"></i>
+<i class="fa fa-star" style="color:#cbcbcb !important;"></i>
+<i class="fa fa-star" style="color:#cbcbcb !important;"></i>
+{% endif %}
+
+{% if product.reviews.all.count > 1 %}
+<span class="text-muted"> ({{product.reviews.all.count}} reviews)</span>
+{% else %}
+<span class="text-muted"> ({{product.reviews.all.count}} review)</span>
+{% endif %}
