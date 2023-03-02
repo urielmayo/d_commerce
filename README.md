@@ -2,13 +2,14 @@
 
 D-Commmerce is an experimental web application for creating an online marketplace. It is not intended for real-world use and does not support actual buying or selling of products. Users can sign up, buy and sell products, manage stock and delivering and more. It is built with Django, Bootstrap, Postgres and Docker.
 
-### Requirements
+## Requirements
 - Docker
 - Docker-Compose
 - Make (optional)
-#### Installation
-1.  Clone the repositoy: `git clone https://github.com/urielmayo/d_commerce.git (http)` or `git clone git@github.com:urielmayo/d_commerce.git (ssh)`
-2. Create an `.env` file in the root project directory with the following variables :
+
+## Installation
+1.  Clone the repository: `git clone https://github.com/urielmayo/d_commerce.git (http)` or `git clone git@github.com:urielmayo/d_commerce.git (ssh)`
+2. Create an `.env` file in the root project directory with the following variables:
 ```
 POSTGRES_DB=postgres_db
 POSTGRES_USER=postgres_user
