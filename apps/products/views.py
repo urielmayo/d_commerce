@@ -21,12 +21,13 @@ class ProductListView(NotificationMixin, ListView):
     def get_queryset(self):
         keyword = self.request.GET.get('search', '')
         category = self.request.GET.get('category', '')
-        queryset = Product.objects.exclude(
-            Q(seller=self.request.user.profile) | Q(stock_qty=0)
-        )
+        queryset = Product.objects.exclude(stock_qty=0)
+        if self.request.user.is_authenticated:
+            queryset = queryset.exclude(seller=self.request.user.profile)
         if keyword:
             queryset = queryset.filter(
-                Q(name__icontains=keyword) | Q(brand__name__icontains=keyword)
+                Q(name__icontains=keyword)
+                | Q(brand__name__icontains=keyword)
             )
         if category:
             queryset = queryset.filter(categories__name=category)
@@ -48,9 +49,10 @@ class ProductDetailView(NotificationMixin, DetailView):
     context_object_name = 'product'
 
     def get_queryset(self):
-        return Product.objects.exclude(
-            Q(seller=self.request.user.profile) | Q(stock_qty=0)
-        )
+        queryset = Product.objects.exclude(stock_qty=0)
+        if self.request.user.is_authenticated:
+            queryset = queryset.exclude(seller=self.request.user.profile)
+        return queryset
 
 
 class ProductCreateView(LoginRequiredMixin, NotificationMixin, CreateView):
