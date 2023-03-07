@@ -4,6 +4,8 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth import views as auth_views
 from django.views.generic import FormView, DetailView, ListView, CreateView, UpdateView
 from django.contrib.auth.decorators import login_required
+from django.contrib.auth.views import PasswordChangeView
+from django.contrib.messages.views import SuccessMessageMixin
 
 from apps.users.forms import SignUpForm, ProfileAddressForm, ProfilePaymentForm
 from apps.users.models import Profile, ProfileAddress, ProfilePayment, ShoppingCart, ShoppingCartLine
@@ -37,6 +39,14 @@ class LogoutView(LoginRequiredMixin, auth_views.LogoutView):
 class ProfileDetailView(LoginRequiredMixin, NotificationMixin, DetailView):
     model = Profile
     template_name = "users/user/profile.html"
+
+    def get_object(self):
+        return self.request.user.profile
+
+class ProfileChangePasswordView(SuccessMessageMixin, PasswordChangeView):
+    template_name = "users/user/change_password.html"
+    success_message = "Your password has been changed succesfully"
+    success_url = reverse_lazy('users:my-profile')
 
     def get_object(self):
         return self.request.user.profile
