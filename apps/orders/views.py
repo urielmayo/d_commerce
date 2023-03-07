@@ -99,3 +99,15 @@ def deliver_product(request, pk):
         url=reverse_lazy('orders:list')
     )
     return redirect('orders:sales-list')
+
+@login_required
+def cancel_order_line(request, pk):
+    order_line = get_object_or_404(
+        OrderLine,
+        pk=pk,
+        status='to_ship',
+        order__customer=request.user.profile
+    )
+    order_line.status = 'cancelled'
+    order_line.save()
+    return redirect('orders:list')
