@@ -26,7 +26,7 @@ class Brand(models.Model):
     """Model definition for Brand."""
 
     # TODO: Define fields here
-    name = models.CharField(max_length=100)
+    name = models.CharField(max_length=100, unique=True)
 
     class Meta:
         """Meta definition for Brand."""
@@ -60,6 +60,15 @@ class Product(models.Model):
         upload_to='product_pics',
         validators=[validate_image_size],
         null=True
+    )
+    condition = models.CharField(
+        choices=[
+            ('new', 'New'),
+            ('used', 'Used'),
+            ('refurbished', 'Refurbished')
+        ],
+        default='new',
+        max_length=15
     )
 
     @property
