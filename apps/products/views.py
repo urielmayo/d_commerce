@@ -20,7 +20,8 @@ class ProductListView(NotificationMixin, ListView):
 
     def get_queryset(self):
         keyword = self.request.GET.get('search', '')
-        category = self.request.GET.get('category', '')
+        category = self.request.GET.get('category')
+        condition =self.request.GET.get('condition')
         queryset = Product.objects.exclude(stock_qty=0)
         if self.request.user.is_authenticated:
             queryset = queryset.exclude(seller=self.request.user.profile)
@@ -31,6 +32,8 @@ class ProductListView(NotificationMixin, ListView):
             )
         if category:
             queryset = queryset.filter(categories__name=category)
+        if condition:
+            queryset = queryset.filter(condition=condition)
         return queryset
 
     def get_context_data(self, **kwargs):

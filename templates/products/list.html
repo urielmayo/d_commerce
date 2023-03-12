@@ -23,6 +23,21 @@
                             </a>
                             {% endfor %}
                         </ul>
+                        <br>
+                        <ul class="list-group list-group-flush">
+                            <a  class="list-group-item"
+                                href="{% url 'products:list' %}?search={{search_val | urlencode}}&category={{category | urlencode}}&condition=new">
+                                New
+                            </a>
+                            <a  class="list-group-item"
+                                href="{% url 'products:list' %}?search={{search_val | urlencode}}&category={{category | urlencode}}&condition=used">
+                                Used
+                            </a>
+                            <a  class="list-group-item"
+                                href="{% url 'products:list' %}?search={{search_val | urlencode}}&category={{category | urlencode}}&condition=refurbished">
+                                Refurbished
+                            </a>
+                        </ul>
                     </div>
                 </div>
             </div>

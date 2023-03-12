@@ -36,12 +36,12 @@
                         {{form.brand.label_tag}}
                         {{form.brand}}
                     </div>
-                    <div class="col-6 mt-3">
+                    <div class="col-12 mt-3">
                         {{form.picture.label_tag}}
                         {{form.picture}}
                     </div>
-                    <div class="col-6 mt-3">
-                        <p>{{form.condition.label_tag}}</p>
+                    <div class="col-12 mt-3">
+                        {{form.condition.label_tag}}
                         {% for radio in form.condition %}
                             <div class="form-check form-check-inline">
                                 {{radio}}
