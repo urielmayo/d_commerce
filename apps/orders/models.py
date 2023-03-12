@@ -68,6 +68,7 @@ class OrderLine(models.Model):
             ('to_ship', 'To Ship'),
             ('in_transit', 'In Transit'),
             ('delivered', 'Delivered'),
+            ('cancelled', 'Cancelled')
         ],
         default='to_ship',
         max_length=30
@@ -83,6 +84,7 @@ class OrderLine(models.Model):
         status_color = {
             'to_ship': 'text-muted',
             'in_transit': 'text-warning',
-            'delivered': 'text-success'
+            'delivered': 'text-success',
+            'cancelled': 'text-danger'
         }
         return status_color[self.status]

@@ -19,6 +19,7 @@ class ProductForm(forms.ModelForm):
             'sku': forms.TextInput(attrs={'class': 'form-control'}),
             'price': forms.NumberInput(attrs={'class': 'form-control'}),
             'stock_qty': forms.NumberInput(attrs={'class': 'form-control'}),
+            'condition': forms.RadioSelect()
         }
 
     def __init__(self, *args, **kwargs):

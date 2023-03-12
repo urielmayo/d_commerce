@@ -23,9 +23,16 @@
 
         <h4>Purchases</h4>
         <ul class="list-group">
+            <a class="list-group-item" href="{% url 'orders:list' %}">My Orders</a>
+        </ul>
+
+        <br>
+
+        <h4>Settings</h4>
+        <ul class="list-group">
+            <a class="list-group-item" href="{% url 'users:change-password' %}">Change Password</a>
             <a class="list-group-item" href="{% url 'users:address:list' %}">Addresses</a>
             <a class="list-group-item" href="{% url 'users:paymentcard:list' %}">Payment Cards</a>
-            <a class="list-group-item" href="{% url 'orders:list' %}">My Orders</a>
         </ul>
 
     </div>

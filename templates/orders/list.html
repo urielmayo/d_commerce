@@ -51,6 +51,12 @@
                                         <strong>{{line.get_status_display.upper}}</strong>
                                     </div>
 
+                                    {% if line.status == 'to_ship' %}
+                                        <div class="p-0">
+                                            <a class="text-danger" href="{% url 'orders:cancel_order_line' line.pk %}">Cancel Order</a>
+                                        </div>
+                                    {% endif %}
+
                                     {% if line.status == 'delivered' %}
 
                                         <div class="p-0">

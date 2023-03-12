@@ -27,21 +27,28 @@
 
             {# name, brand and picture#}
             <div class="mt-3">
-                <div class="row">
-                    <div class="col-md">
+                <div class="row mb-3">
+                    <div class="col-6">
                         {{form.name.label_tag}}
                         {{form.name}}
                     </div>
-                    <div class="col-md">
+                    <div class="col-6">
                         {{form.brand.label_tag}}
                         {{form.brand}}
                     </div>
+                    <div class="col-12 mt-3">
+                        {{form.picture.label_tag}}
+                        {{form.picture}}
+                    </div>
+                    <div class="col-12 mt-3">
+                        {{form.condition.label_tag}}
+                        {% for radio in form.condition %}
+                            <div class="form-check form-check-inline">
+                                {{radio}}
+                            </div>
+                        {% endfor %}
+                    </div>
                 </div>
-            </div>
-
-            <div class="mt-3">
-                {{form.picture.label_tag}}
-                {{form.picture}}
             </div>
 
             {# description #}

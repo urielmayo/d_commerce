@@ -28,6 +28,7 @@ urlpatterns = [
     path('signup/', views.SignUpView.as_view(),name='signup'),
 
     path('my-profile/', views.ProfileDetailView.as_view(), name='my-profile'),
+    path('my-profile/change_password', views.ProfileChangePasswordView.as_view(), name='change-password'),
     path('my-profile/questions/', views.ProductQuestionListView.as_view(), name='questions'),
     path('my-profile/published-products/', views.PublishedProductsListView.as_view(), name='published-products'),
     path('my_profile/published-products/<int:pk>/update_qty/', views.update_stock_qty, name='update_qty'),
